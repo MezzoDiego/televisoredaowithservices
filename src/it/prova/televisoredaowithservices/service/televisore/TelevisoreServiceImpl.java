@@ -144,4 +144,22 @@ public class TelevisoreServiceImpl implements TelevisoreService {
 		return null;
 	}
 
+	@Override
+	public int deleteAll() throws Exception {
+		int result = 0;
+		try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
+
+			// inietto la connection nel dao
+			televisoreDAO.setConnection(connection);
+
+			// eseguo quello che realmente devo fare
+			result = televisoreDAO.deleteAll();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
+	}
+
 }
