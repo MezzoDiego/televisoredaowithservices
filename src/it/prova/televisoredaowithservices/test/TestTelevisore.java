@@ -24,7 +24,9 @@ public class TestTelevisore {
 			System.out.println("------------------------------------------------------------");
 			// testFindByExample(televisoreService);
 			System.out.println("------------------------------------------------------------");
-			testVoglioTuttiITelevisoriProdottiTra(televisoreService);
+			//testVoglioTuttiITelevisoriProdottiTra(televisoreService);
+			System.out.println("------------------------------------------------------------");
+			testVoglioIlTelevisorePiuGrande(televisoreService);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -128,6 +130,34 @@ public class TestTelevisore {
 		System.out.println("Sono stati rimossi " + rowsAffected + " records.");
 
 		System.out.println(".......testVoglioTuttiITelevisoriProdottiTra inizio.............");
+
+	}
+
+	private static void testVoglioIlTelevisorePiuGrande(TelevisoreService televisoreService) throws Exception {
+		System.out.println(".......testVoglioIlTelevisorePiuGrande inizio.............");
+
+		// faccio le insert e verifico che sia tutto ok
+		Date dataProduzione = new SimpleDateFormat("dd-MM-yyyy").parse("03-12-2021");
+		Televisore televisoreDaInserire1 = new Televisore("Sony", "Bravia", 60, dataProduzione);
+		Televisore televisoreDaInserire2 = new Televisore("Samsung", "Carl2000", 50, dataProduzione);
+
+		if (televisoreService.inserisciNuovo(televisoreDaInserire1) != 1)
+			throw new RuntimeException("testInserimentoNuovoUser FAILED ");
+
+		if (televisoreService.inserisciNuovo(televisoreDaInserire2) != 1)
+			throw new RuntimeException("testInserimentoNuovoUser FAILED ");
+
+		// esecuzione query di ricerca
+		Televisore televisorePiuGrande = televisoreService.voglioIlTelevisorePiuGrande();
+
+		// check visivo
+		System.out.println(televisorePiuGrande);
+
+		// reset tabella
+		int rowsAffected = televisoreService.deleteAll();
+		System.out.println("Sono stati rimossi " + rowsAffected + " records.");
+//
+//		System.out.println(".......testVoglioIlTelevisorePiuGrande fine.............");
 
 	}
 

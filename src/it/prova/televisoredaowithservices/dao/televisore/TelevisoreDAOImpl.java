@@ -232,8 +232,30 @@ public class TelevisoreDAOImpl extends AbstractMySQLDAO implements TelevisoreDAO
 
 	@Override
 	public Televisore voglioIlTelevisorePiuGrande() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		// prima di tutto cerchiamo di capire se possiamo effettuare le operazioni
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		Televisore result = null;
+		try (Statement s = connection.createStatement()) {
+
+			try (ResultSet rs = s
+					.executeQuery("select * from televisore where pollici = (select max(pollici) from televisore)")) {
+				if (rs.next()) {
+					result = new Televisore();
+					result.setId(rs.getLong("id"));
+					result.setMarca(rs.getString("marca"));
+					result.setModello(rs.getString("modello"));
+					result.setPollici(rs.getInt("pollici"));
+					result.setDataProduzione(rs.getDate("dataproduzione"));
+				}
+			} // niente catch qui
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
 	}
 
 	@Override
