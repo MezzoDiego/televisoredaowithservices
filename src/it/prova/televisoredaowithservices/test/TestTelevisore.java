@@ -22,7 +22,9 @@ public class TestTelevisore {
 			System.out.println("------------------------------------------------------------");
 			// testUpdate(televisoreService);
 			System.out.println("------------------------------------------------------------");
-			testFindByExample(televisoreService);
+			// testFindByExample(televisoreService);
+			System.out.println("------------------------------------------------------------");
+			testVoglioTuttiITelevisoriProdottiTra(televisoreService);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,6 +101,33 @@ public class TestTelevisore {
 		// reset tabella
 		int rowsAffected = televisoreService.deleteAll();
 		System.out.println("Sono stati rimossi " + rowsAffected + " records.");
+
+	}
+
+	private static void testVoglioTuttiITelevisoriProdottiTra(TelevisoreService televisoreService) throws Exception {
+		System.out.println(".......testVoglioTuttiITelevisoriProdottiTra inizio.............");
+
+		// faccio la insert e verifico che sia tutto ok
+		Date dataProduzione = new SimpleDateFormat("dd-MM-yyyy").parse("03-12-2021");
+		Televisore televisoreDaInserire = new Televisore("Sony", "Bravia", 40, dataProduzione);
+
+		if (televisoreService.inserisciNuovo(televisoreDaInserire) != 1)
+			throw new RuntimeException("testInserimentoNuovoUser FAILED ");
+
+		// esecuzione query di ricerca
+		Date dataProduzioneMin = new SimpleDateFormat("dd-MM-yyyy").parse("01-01-2020");
+		Date dataProduzioneMax = new SimpleDateFormat("dd-MM-yyyy").parse("01-01-2023");
+		List<Televisore> televisoriAventiDataProduzioneTra = televisoreService
+				.voglioTuttiITelevisoriProdottiTra(dataProduzioneMin, dataProduzioneMax);
+
+		// test visivo
+		System.out.println(televisoriAventiDataProduzioneTra);
+
+		// reset tabella
+		int rowsAffected = televisoreService.deleteAll();
+		System.out.println("Sono stati rimossi " + rowsAffected + " records.");
+
+		System.out.println(".......testVoglioTuttiITelevisoriProdottiTra inizio.............");
 
 	}
 

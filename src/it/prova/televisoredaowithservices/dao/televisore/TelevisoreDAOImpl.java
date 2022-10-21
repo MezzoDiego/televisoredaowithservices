@@ -195,9 +195,39 @@ public class TelevisoreDAOImpl extends AbstractMySQLDAO implements TelevisoreDAO
 	}
 
 	@Override
-	public List<Televisore> voglioTuttiITelevisoriProdottiTra(Date dataMin, Date dataMax) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Televisore> voglioTuttiITelevisoriProdottiTra(java.util.Date dataMin, java.util.Date dataMax)
+			throws Exception {
+		// prima di tutto cerchiamo di capire se possiamo effettuare le operazioni
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		if (dataMin == null || dataMax == null)
+			throw new Exception("Valore di input non ammesso.");
+
+		Televisore temp = null;
+		List<Televisore> result = new ArrayList<>();
+		try (PreparedStatement ps = connection
+				.prepareStatement("select * from televisore where dataproduzione between ? and ?")) {
+
+			ps.setDate(1, new java.sql.Date(dataMin.getTime()));
+			ps.setDate(2, new java.sql.Date(dataMax.getTime()));
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					temp = new Televisore();
+					temp.setMarca(rs.getString("marca"));
+					temp.setModello(rs.getString("modello"));
+					temp.setPollici(rs.getInt("pollici"));
+					temp.setDataProduzione(rs.getDate("dataproduzione"));
+					temp.setId(rs.getLong("id"));
+					result.add(temp);
+				}
+			} // niente catch qui
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
 	}
 
 	@Override
