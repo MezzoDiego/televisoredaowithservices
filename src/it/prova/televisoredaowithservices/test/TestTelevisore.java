@@ -24,9 +24,11 @@ public class TestTelevisore {
 			System.out.println("------------------------------------------------------------");
 			// testFindByExample(televisoreService);
 			System.out.println("------------------------------------------------------------");
-			//testVoglioTuttiITelevisoriProdottiTra(televisoreService);
+			// testVoglioTuttiITelevisoriProdottiTra(televisoreService);
 			System.out.println("------------------------------------------------------------");
-			testVoglioIlTelevisorePiuGrande(televisoreService);
+			// testVoglioIlTelevisorePiuGrande(televisoreService);
+			System.out.println("------------------------------------------------------------");
+			testVoglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(televisoreService);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,8 +158,43 @@ public class TestTelevisore {
 		// reset tabella
 		int rowsAffected = televisoreService.deleteAll();
 		System.out.println("Sono stati rimossi " + rowsAffected + " records.");
-//
-//		System.out.println(".......testVoglioIlTelevisorePiuGrande fine.............");
+
+		System.out.println(".......testVoglioIlTelevisorePiuGrande fine.............");
+
+	}
+
+	private static void testVoglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(TelevisoreService televisoreService)
+			throws Exception {
+		System.out.println(".......testVoglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi inizio.............");
+
+		// faccio le insert e verifico che sia tutto ok
+		Date dataProduzione = new SimpleDateFormat("dd-MM-yyyy").parse("03-07-2022");
+		Televisore televisoreDaInserire1 = new Televisore("Sony", "Bravia", 60, dataProduzione);
+		Televisore televisoreDaInserire2 = new Televisore("Samsung", "Carl2000", 50, dataProduzione);
+		Televisore televisoreDaInserire3 = new Televisore("Sony", "Bravia", 60, dataProduzione);
+
+		if (televisoreService.inserisciNuovo(televisoreDaInserire1) != 1)
+			throw new RuntimeException("testInserimentoNuovoUser FAILED ");
+
+		if (televisoreService.inserisciNuovo(televisoreDaInserire2) != 1)
+			throw new RuntimeException("testInserimentoNuovoUser FAILED ");
+
+		if (televisoreService.inserisciNuovo(televisoreDaInserire3) != 1)
+			throw new RuntimeException("testInserimentoNuovoUser FAILED ");
+
+		// esecuzione query di ricerca
+		Date dataDi6MesiFa = new SimpleDateFormat("dd-MM-yyyy").parse("21-04-2022");
+		List<String> marcheTVProdottiNegliUltimi6Mesi = televisoreService
+				.voglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(dataDi6MesiFa);
+
+		// check visivo
+		System.out.println(marcheTVProdottiNegliUltimi6Mesi);
+
+		// reset tabella
+		int rowsAffected = televisoreService.deleteAll();
+		System.out.println("Sono stati rimossi " + rowsAffected + " records.");
+
+		System.out.println(".......testVoglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi inizio.............");
 
 	}
 

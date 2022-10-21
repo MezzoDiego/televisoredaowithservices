@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -259,9 +260,31 @@ public class TelevisoreDAOImpl extends AbstractMySQLDAO implements TelevisoreDAO
 	}
 
 	@Override
-	public List<Televisore> voglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(Date data) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	public List<String> voglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(Date data) throws Exception {
+		// prima di tutto cerchiamo di capire se possiamo effettuare le operazioni
+		if (isNotActive())
+			throw new Exception("Connessione non attiva. Impossibile effettuare operazioni DAO.");
+
+		if (data == null)
+			throw new Exception("Valore di input non ammesso.");
+
+		List<String> result = new ArrayList<>();
+		try (PreparedStatement ps = connection
+				.prepareStatement("select distinct t.marca from televisore t where t.dataproduzione > ?")) {
+
+			ps.setDate(1, new java.sql.Date(data.getTime()));
+
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					result.add(rs.getString("marca"));
+				}
+			} // niente catch qui
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return result;
 	}
 
 	@Override

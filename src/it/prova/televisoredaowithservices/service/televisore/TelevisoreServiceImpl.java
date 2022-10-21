@@ -163,8 +163,8 @@ public class TelevisoreServiceImpl implements TelevisoreService {
 	}
 
 	@Override
-	public List<Televisore> voglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(Date data) throws Exception {
-		List<Televisore> result = new ArrayList<>();
+	public List<String> voglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(Date data) throws Exception {
+		List<String> result = new ArrayList<>();
 		try (Connection connection = MyConnection.getConnection(Constants.DRIVER_NAME, Constants.CONNECTION_URL)) {
 
 			// inietto la connection nel dao

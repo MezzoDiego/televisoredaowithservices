@@ -26,7 +26,7 @@ public interface TelevisoreService {
 	
 	public Televisore voglioIlTelevisorePiuGrande() throws Exception;
 	
-	public List<Televisore> voglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(Date data) throws Exception;
+	public List<String> voglioLaListaDelleMarcheDiTVProdottiNegliUltimi6Mesi(Date data) throws Exception;
 	
 	public int deleteAll() throws Exception;
 }
